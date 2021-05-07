@@ -10,7 +10,6 @@ module.exports = {
 
     execute(message, args) {
         /***************************************************  Validate Channel ***************************************************/
-
         let leetcodeChannel = message.guild.channels.cache.get(
             leetcode_channel
         );
@@ -28,17 +27,21 @@ module.exports = {
             return;
         }
 
-        var strcmp = (a, b) => {
-            return a < b ? -1 : a > b ? 1 : 0;
-        };
+        /******************** Sending a Question Logic *****************/
 
-        /*************************************************** Sends List of all questions /***************************************************/
         if (args[0] == "list") {
+            /************************************** Sends List of all questions **********************************/
             leetcodeLister(message);
         } else if (args[0] == "help") {
+            /************************************** Sends Help Information **************************************/
             leetcodeHelp(message);
         } else {
-            /********************************************** Send Single Leetcode Question *********************************************/
+            /************************************** Send Single Leetcode Question *******************************/
+
+            // Function for string comparisons
+            var strcmp = (a, b) => {
+                return a < b ? -1 : a > b ? 1 : 0;
+            };
 
             // Check request argument for premium requirements
             if (args[1] == "true") isPremium = true;
@@ -47,6 +50,7 @@ module.exports = {
             // Get initial random leetcode question id
             let id = Math.floor(Math.random() * Math.floor(leetcode.length));
 
+            /****************** Modify Question Based on Arguments *****************/
             if (!args[0]) {
                 // Do not select any specific difficulty if no args
             } else {
@@ -56,6 +60,7 @@ module.exports = {
                     strcmp(args[0].toLowerCase(), "medium") == 0 ||
                     strcmp(args[0].toLowerCase(), "hard") == 0
                 )
+                    // loop until found request
                     while (
                         leetcode[id].difficulty.toLowerCase() !=
                             args[0].toLowerCase() ||
@@ -66,6 +71,7 @@ module.exports = {
                         );
                     }
                 else {
+                    // If arguments are invalid send an error message to the user
                     message.channel.send(
                         'Command is invalid! Use "!leetcode help" for a list of available commands'
                     );

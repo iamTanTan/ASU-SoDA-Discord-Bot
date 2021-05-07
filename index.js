@@ -9,12 +9,12 @@ bot.commands = new Discord.Collection();
 
 const prefix = "!";
 
-//Here we read through all the files in the command folder ending with .js with a fs module.
+// Retrieve bot commands
 const commandFiles = fs
     .readdirSync("./commands")
     .filter((file) => file.endsWith(".js"));
 
-//In this we add files we read through fs module into the collection declared above
+// Add files into commands collection
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
     bot.commands.set(command.name, command);
@@ -28,6 +28,7 @@ bot.on("message", (message) => {
     // Check for bot
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
+    // Split message content to get command called
     const args = message.content.split(/ +/);
     const command = args.shift().toLowerCase();
     console.info(`Called command: ${command}`);
